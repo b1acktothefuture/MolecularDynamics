@@ -1,7 +1,6 @@
 #include <Windows.h>
 #include <GL\freeglut.h>
 #include <iostream>
-#include "particle.h"
 #include "collisionSystem.h"
 #include "generateRandom.h"
 
@@ -14,8 +13,6 @@ int pix2 = 600; // y axis
 bool init = true;
 
 collisionSystem col;
-
-
 
 void drawShape(void) {
     Particle* temp;
@@ -39,12 +36,9 @@ void initRendering() {
 
 // called when the window is resized
 void handleResize(int w, int h) {
-
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
-
     glOrtho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
 }
 
@@ -64,20 +58,20 @@ void update(int value) {
 
 
 int main(int argc, char** argv) {
-    int n = 40;
+    int n = 50;
     Particle** arr;
     arr = (Particle**)(calloc(n, sizeof(Particle*)));
     for (int i = 0; i < n; i++) {
-        arr[i] = new Particle(0.0,0.0,0.0,0.0,0.0,0.0);
+        arr[i] = new Particle(0.0,0.0,0.0,0.0,0.0,0.0); // initializing with zeros
     }
-    generate(arr, n,0.25);
-    col.construct(arr, n,&init,10000);
+    generate(arr, n,0.25); // assigning random positions and velocities
+    col.construct(arr, n,&init,10000); // constructor for collision class
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(pix1, pix2);
     glutCreateWindow("Moving particle");
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //reducing ALIASING, need to work on this// supersampling
     initRendering();
     glutDisplayFunc(drawScene);
     glutReshapeFunc(handleResize);

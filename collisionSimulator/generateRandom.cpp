@@ -11,12 +11,16 @@ float randFloat(float a, float b)
 void genBALL(Particle* p, float x1, float y1, float size) {
 	p->disc.rx = randFloat(x1 + size*(0.5000- fact), x1 + size*(0.5000 + fact));
 	p->disc.ry = randFloat(y1 + size * (0.5000 - fact), y1 + size * (0.5000 + fact));
-	p->disc.vx = randFloat(0.0, 0.008*2) - 0.008;
-	p->disc.vy = randFloat(0.0, 0.008*2) - 0.008;
-	
+	p->disc.vx = randFloat(0.0, 0.005*2) - 0.005;
+	p->disc.vy = randFloat(0.0, 0.005*2) - 0.005;	
 	float t = min(min(size + x1 - p->disc.rx, p->disc.rx - x1), min(size + y1 - p->disc.ry, p->disc.ry - y1));
 	p->disc.radius = randFloat(t/float(2), t);
 	p->disc.mass = (p->disc.radius)* (p->disc.radius);
+	/*
+	For better distribution of radii, intitiaize the radius first and choose centre from a valid disc of radius =  size - rBALL;
+	find a way to choose uniformly randomly from a disc or implement a 2D Gaussian distribution,
+	current implementation has a bias towards small radii especially for large N due to independent uniform sampling for rx , ry and recursive implementation.
+	*/
 }
 
 void randPos(int n,Particle** array, float x1, float y1, float size) {
@@ -43,7 +47,6 @@ void randPos(int n,Particle** array, float x1, float y1, float size) {
 			n--;
 		}
 		return;
-
 	}
 	if (n > 4) {
 		k = n / 4;
