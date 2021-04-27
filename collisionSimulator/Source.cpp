@@ -1,10 +1,11 @@
 #include <Windows.h>
 #include <GL\freeglut.h>
 #include <iostream>
-#include <stdio.h> 
 #include "particle.h"
 #include "collisionSystem.h"
 #include "generateRandom.h"
+
+#define IX(n) float(n)/255.00
 
 using namespace std;
 
@@ -14,17 +15,19 @@ bool init = true;
 
 collisionSystem col;
 
+
+
 void drawShape(void) {
     Particle* temp;
     for (int i = 0; i < col.n; i++) {
         temp = col.particles[i];
         glBegin(GL_POLYGON);
-        glColor3f(0.0f, 0.0f, 0.0f);
-        for (int i = 0; i <= 50; i++) {
-            double angle = 2 * 3.141 * i / 50;
+        glColor3f(IX(100) , IX(224), IX(181));
+        for (int i = 0; i <= 1000; i++) {
+            double angle = 2.000 * 3.141857 * float(i) / float(1000);
             double x = temp->disc.rx + temp->disc.radius * cos(angle);
             double y = temp->disc.ry + temp->disc.radius * sin(angle);
-            glVertex2d(pix1 * x, pix2 * y);
+            glVertex2d(float(pix1) * x, float(pix2) * y);
         }
         glEnd();
     }
@@ -61,19 +64,20 @@ void update(int value) {
 
 
 int main(int argc, char** argv) {
-    int n = 100;
+    int n = 40;
     Particle** arr;
     arr = (Particle**)(calloc(n, sizeof(Particle*)));
     for (int i = 0; i < n; i++) {
         arr[i] = new Particle(0.0,0.0,0.0,0.0,0.0,0.0);
     }
-    generate(arr, n,0.2);
+    generate(arr, n,0.25);
     col.construct(arr, n,&init,10000);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(pix1, pix2);
     glutCreateWindow("Moving particle");
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     initRendering();
     glutDisplayFunc(drawScene);
     glutReshapeFunc(handleResize);
