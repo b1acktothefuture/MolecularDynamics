@@ -27,12 +27,18 @@
     <ClCompile Include="collisionSystem.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="generateRandom.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="particle.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="collisionSystem.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="generateRandom.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

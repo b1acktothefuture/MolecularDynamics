@@ -146,11 +146,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="collisionSystem.cpp" />
+    <ClCompile Include="generateRandom.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="collisionSystem.h" />
+    <ClInclude Include="generateRandom.h" />
     <ClInclude Include="particle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
