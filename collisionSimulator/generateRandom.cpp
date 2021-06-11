@@ -1,21 +1,24 @@
 #include "generateRandom.h"
 int start;
-float fact = 0.0;
+double fact = 0.0;
 
-float randFloat(float a, float b)
+double randFloat(double a, double b)
 {
-	return ((b - a) * ((float)rand() / RAND_MAX)) + a;
+	return ((b - a) * ((double)rand() / RAND_MAX)) + a;
 }
 
 
-void genBALL(Particle* p, float x1, float y1, float size) {
+void genBALL(Particle* p, double x1, double y1, double size) {
 	p->disc.rx = randFloat(x1 + size*(0.5000- fact), x1 + size*(0.5000 + fact));
 	p->disc.ry = randFloat(y1 + size * (0.5000 - fact), y1 + size * (0.5000 + fact));
-	p->disc.vx = randFloat(0.0, 0.005*2) - 0.005;
-	p->disc.vy = randFloat(0.0, 0.005*2) - 0.005;	
-	float t = min(min(size + x1 - p->disc.rx, p->disc.rx - x1), min(size + y1 - p->disc.ry, p->disc.ry - y1));
-	p->disc.radius = randFloat(t/float(2), t);
+	p->disc.vx = randFloat(0.0, 0.009*2) - 0.009;
+	p->disc.vy = randFloat(0.0, 0.009*2) - 0.009;	
+	double t = min(min(size + x1 - p->disc.rx, p->disc.rx - x1), min(size + y1 - p->disc.ry, p->disc.ry - y1));
+	p->disc.radius = randFloat(t/double(2), t);
 	p->disc.mass = (p->disc.radius)* (p->disc.radius);
+	p->c.x = randFloat(0.3, 0.7);
+	p->c.y = randFloat(0.3, 0.7);
+	p->c.z = p->c.y;// randFloat(0.3, 0.7);
 	/*
 	For better distribution of radii, intitiaize the radius first and choose centre from a valid disc of radius =  size - rBALL;
 	find a way to choose uniformly randomly from a disc or implement a 2D Gaussian distribution,
@@ -23,26 +26,26 @@ void genBALL(Particle* p, float x1, float y1, float size) {
 	*/
 }
 
-void randPos(int n,Particle** array, float x1, float y1, float size) {
+void randPos(int n,Particle** array, double x1, double y1, double size) {
 	int k, r, t;
-	if (n <= 4 && n >0) {
+	if (n <= 4 ) {
 		if (n != 0) {
-			genBALL(array[start],x1, y1, size/float(2));
+			genBALL(array[start],x1, y1, size/double(2));
 			start++;
 			n--;
 		}
 		if (n != 0) {
-			genBALL(array[start], x1 + size/float(2), y1, size / float(2));
+			genBALL(array[start], x1 + size/double(2), y1, size / double(2));
 			start++;
 			n--;
 		}
 		if (n != 0) {
-			genBALL(array[start], x1 + size / float(2), y1 + size / float(2), size / float(2));
+			genBALL(array[start], x1 + size / double(2), y1 + size / double(2), size / double(2));
 			start++;
 			n--;
 		}
 		if (n != 0) {
-			genBALL(array[start], x1, y1 + size / float(2), size / float(2));
+			genBALL(array[start], x1, y1 + size / double(2), size / double(2));
 			start++;
 			n--;
 		}
@@ -52,20 +55,27 @@ void randPos(int n,Particle** array, float x1, float y1, float size) {
 		k = n / 4;
 		r = n % 4 + 1;
 		t = rand() % r;
-		randPos(k + t , array,  x1,  y1,  size/float(2));
+		randPos(k + t , array,  x1,  y1,  size/double(2));
 		r = r - t;
 		t = rand() % r;
-		randPos(k + t , array, x1 + (size / float(2)), y1, size / float(2));
+		randPos(k + t , array, x1 + (size / double(2)), y1, size / double(2));
 		r = r - t;
 		t = rand() % r;
-		randPos(k + t, array, x1, y1 + (size / float(2)), size / float(2));
+		randPos(k + t, array, x1, y1 + (size / double(2)), size / double(2));
 		r = r - t;
 		t = rand() % r;
-		randPos(k + t, array, x1 + (size / float(2)), y1 + (size / float(2)), size / float(2));
+		randPos(k + t, array, x1 + (size / double(2)), y1 + (size / double(2)), size / double(2));
 	}
 }
 
-void generate(Particle** arr, int N, float factor) {
+void lattice(Particle** arr, int N, double factor) {
+	int n = ceil(sqrt(N)) + 1;
+	double size = 1.00 / n;
+
+
+}
+
+void generate(Particle** arr, int N, double factor) {
 	start = 0;
 	fact = factor;
 	srand((unsigned)time(0));

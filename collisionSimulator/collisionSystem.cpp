@@ -3,10 +3,7 @@
 
 
 void collisionSystem::construct(Particle** arr, int num, bool* indi, int lt) {
-    particles = (Particle**)(calloc(num,sizeof(Particle*)));
-    for (int i = 0; i < num; i++) {
-        particles[i] = arr[i];
-    }
+    particles = arr;
     n = num;
     limit = lt;
     pq.push(new Event(0, NULL, NULL));

@@ -4,7 +4,7 @@
 using namespace std;
 
 
-float randFloat(float a, float b);
-void genBALL(Particle* p, float x1, float y1, float size);
-void randPos(int n, Particle** array, float x1, float y1, float size);
-void generate(Particle** arr, int N, float factor);
+double randFloat(double a, double b);
+void genBALL(Particle* p, double x1, double y1, double size);
+void randPos(int n, Particle** array, double x1, double y1, double size);
+void generate(Particle** arr, int N, double factor);
