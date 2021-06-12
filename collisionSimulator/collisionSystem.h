@@ -43,7 +43,7 @@ public:
 
 class collisionSystem {
 
-    double HZ = 1.0;
+    double HZ = 2.0;
     priority_queue<Event*, vector<Event*>, eventCompare> pq;
     double t = 0.0;
     int limit;

@@ -51,9 +51,9 @@ void collisionSystem::simulate() {
         }
         Particle* a = e->a;
         Particle* b = e->b;
-
+        Particle* temp;
         // physical collision, so update positions, and then simulation clock
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) 
             particles[i]->move(e->time - t);
         t = e->time;
 

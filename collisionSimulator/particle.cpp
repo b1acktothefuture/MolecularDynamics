@@ -26,13 +26,13 @@ double Particle::timeToHit(Particle* that) {
 }
 
 double Particle::timeToHitVerticalWall() {
-    if (disc.vx > 0) return (1.0 - disc.rx - disc.radius) / disc.vx;  ///initialize pixel values
+    if (disc.vx > 0) return (1.000 - disc.rx - disc.radius) / disc.vx;  ///initialize pixel values
     else if (disc.vx < 0) return (disc.radius - disc.rx) / disc.vx;
     else             return infinity;
 }
 
 double Particle::timeToHitHorizontalWall() {
-    if (disc.vy > 0) return (1.0 - disc.ry - disc.radius) / disc.vy;  ///initialize pixel values
+    if (disc.vy > 0) return (1.000 - disc.ry - disc.radius) / disc.vy;  ///initialize pixel values
     else if (disc.vy < 0) return (disc.radius - disc.ry) / disc.vy;
     else             return infinity;
 }
