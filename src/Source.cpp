@@ -1,22 +1,25 @@
-#include <Windows.h>
 #include <math.h>
-#include <GL\freeglut.h>
+#include <GL/freeglut.h>
 #include <iostream>
-#include "collisionSystem.h"
-#include "generateRandom.h"
+#include "includes/collisionSystem.h"
+#include "includes/generateRandom.h"
 
-#define IX(n) double(n)/255.00
+#define IX(n) double(n) / 255.00
+#define HZ 20
+
+// g++ src/Source.cpp src/particle.cpp src/collisionSystem.cpp src/generateRandom.cpp -lglut -lGL
 
 using namespace std;
 
-int pix1 = 600; // x axis
-int bord = int(pix1/80);
-int pix = pix1 - 2*bord;
+int pix1 = 700; // x axis
+int bord = int(pix1 / 80);
+int pix = pix1 - 2 * bord;
 bool init = true;
 bool play = true;
-collisionSystem* col;
+collisionSystem *col;
 
-void border() {
+void border()
+{
     double x = 1.0;
     double y = 1.0;
     double z = 1.0;
@@ -39,7 +42,7 @@ void border() {
     glColor3f(x, y, z);
     glVertex2f(pix1, pix1);
     glVertex2f(pix1, bord);
-    glVertex2f(pix1-bord, bord);
+    glVertex2f(pix1 - bord, bord);
     glVertex2f(pix1 - bord, pix1);
     glEnd();
     glBegin(GL_POLYGON);
@@ -51,54 +54,68 @@ void border() {
     glEnd();
 }
 
-void trail(Particle* p) {
+void trail(Particle *p)
+{
     int m = p->tail.len;
-    if(play){
-    p->tail.x[p->tail.pos] = p->disc.rx;
-    p->tail.y[p->tail.pos] = p->disc.ry;
-    p->tail.pos = (p->tail.pos + 1) % m;
-    }
+    if (play)
+    {
+        p->tail.x[p->tail.pos] = p->disc.rx;
+        p->tail.y[p->tail.pos] = p->disc.ry;
+        p->tail.colors[p->tail.pos] = p->c.x;
+        p->tail.pos = (p->tail.pos + 1) % m;
+        }
     int t = p->tail.pos;
-    glColor3f(p->c.x, p->c.y, p->c.z);
-    for (int i = 1; i < p->tail.len-1; i++) { 
-        glLineWidth(5.0* float(i) / p->tail.len + 0.5*(1.0 - float(i)/p->tail.len-1));
+
+    for (int i = 1; i < p->tail.len - 1; i++)
+    {
+        glColor3f(p->tail.colors[i], p->tail.colors[i], p->tail.colors[i]);
+        glLineWidth(5.0 * float(i) / p->tail.len + 0.5 * (1.0 - float(i) / p->tail.len - 1));
         glBegin(GL_LINES);
-        glVertex2f(pix * p->tail.x[(t + i)%m] + bord, pix * p->tail.y[(t + i)%m] + bord);
-        glVertex2f(pix * p->tail.x[(t + i+1) % m] + bord, pix * p->tail.y[(t + i+1) % m] + bord);
+        glVertex2f(pix * p->tail.x[(t + i) % m] + bord, pix * p->tail.y[(t + i) % m] + bord);
+        glVertex2f(pix * p->tail.x[(t + i + 1) % m] + bord, pix * p->tail.y[(t + i + 1) % m] + bord);
         glEnd();
     }
 }
 
-void drawShape(void) {
-    Particle* temp;
+void drawShape(void)
+{
+    Particle *temp;
     int t = 60;
     border();
-    for (int i = 0; i < col->n; i++) {
+    for (int i = 0; i < col->n; i++)
+    {
         temp = col->particles[i];
         //glBegin(GL_LINE_LOOP);
         glBegin(GL_POLYGON);
-        glColor3f(temp->c.x , temp->c.y, temp->c.z);
-        for (int i = 0; i <= t; i++) {
+        glColor3f(temp->c.x, temp->c.y, temp->c.z);
+        for (int i = 0; i <= t; i++)
+        {
             double angle = 2.00000 * 3.141857 * double(i) / double(t);
             double x = double(pix) * (temp->disc.rx + temp->disc.radius * cos(angle));
             double y = double(pix) * (temp->disc.ry + temp->disc.radius * sin(angle));
-            glVertex2f( x+bord, y+bord);
+            glVertex2f(x + bord, y + bord);
         }
         glEnd();
-        if (temp->tr) trail(temp);
+        if (temp->tr)
+            trail(temp);
     }
 }
 
-void mouseFunc(int button, int state, int x, int y) {
+void mouseFunc(int button, int state, int x, int y)
+{
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-        play = !play; 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN ) {
+        play = !play;
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
         double x1 = double(x - bord) / pix;
-        double y1 =1.0 -  double (y - bord) / pix;
-        Particle* temp;
-        for (int i = 0; i < col->n; i++) {
+        double y1 = 1.0 - double(y - bord) / pix;
+        Particle *temp;
+        for (int i = 0; i < col->n; i++)
+        {
             temp = col->particles[i];
-            if ((temp->disc.rx - x1)* (temp->disc.rx - x1) + (temp->disc.ry - y1)* (temp->disc.ry - y1) <=(temp->disc.radius)* (temp->disc.radius)) {
+            if ((temp->disc.rx - x1) * (temp->disc.rx - x1) + (temp->disc.ry - y1) * (temp->disc.ry - y1) <= (temp->disc.radius) * (temp->disc.radius))
+            {
+                // cout << x1 << " " << y1 << endl;
                 col->particles[i]->trailEnable();
                 break;
             }
@@ -106,12 +123,13 @@ void mouseFunc(int button, int state, int x, int y) {
     }
 }
 
-Particle** initialize(int* n) {
+Particle **initialize(int *n)
+{
     cout << "Enter no. of particles: ";
     cin >> *n;
-    Particle** arr = (Particle**)(calloc(*n, sizeof(Particle*)));
-    for (int i = 0; i < *n; i++) 
-        arr[i] = new Particle(0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0); // initializing with zeros
+    Particle **arr = (Particle **)(calloc(*n, sizeof(Particle *)));
+    for (int i = 0; i < *n; i++)
+        arr[i] = new Particle(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0); // initializing with zeros
     cout << "Enter lambda: ";
     double lambda;
     cin >> lambda;
@@ -119,7 +137,8 @@ Particle** initialize(int* n) {
     return arr;
 }
 
-void initRendering() {
+void initRendering()
+{
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glShadeModel(GL_SMOOTH);
     glutInitWindowSize(pix1, pix1);
@@ -130,14 +149,16 @@ void initRendering() {
 }
 
 // called when the window is resized
-void handleResize(int w, int h) {
+void handleResize(int w, int h)
+{
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0f, (double)w, 0.0f, (double)h, -1.0f, 1.0f);
 }
 
-void drawScene() {
+void drawScene()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -145,28 +166,27 @@ void drawScene() {
     glutSwapBuffers();
 }
 
-void update(int value) {
+void update(int value)
+{
     if (play)
         col->simulate();
     glutPostRedisplay();
-    glutTimerFunc(10, update, 0);
+    glutTimerFunc(HZ, update, 0);
 }
 
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     col = new collisionSystem;
     int n;
-    Particle** arr = initialize(&n);
-    col->construct(arr, n,&init,10000); // constructor for collision class
+    Particle **arr = initialize(&n);
+    col->construct(arr, n, &init, 10000, 1); // constructor for collision class
     glutInit(&argc, argv);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //reducing ALIASING, need to work on this// supersampling
     initRendering();
     glutDisplayFunc(drawScene);
     glutReshapeFunc(handleResize);
     glutMouseFunc(mouseFunc);
-    glutTimerFunc(10, update, 0);
+    glutTimerFunc(HZ, update, 0);
     glutMainLoop();
-    return(0);
+    return (0);
 }
-
-
